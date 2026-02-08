@@ -33,8 +33,8 @@ const styles = {
   section: {
     position: 'relative' as const,
     minHeight: '100vh',
-    paddingTop: 120,
-    paddingBottom: 120,
+    paddingTop: 30,
+    paddingBottom: 30,
     overflow: 'hidden',
   },
 

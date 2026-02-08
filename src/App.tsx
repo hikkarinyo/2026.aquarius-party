@@ -1,49 +1,74 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
+import clickSrc from '../public/sounds/click.mp3'
+import spinSrc from '../public/sounds/spin.mp3'
 
 import { AboutBlock } from './components/AboutBlock.tsx'
 import { FairLayout } from './components/FairLayout.tsx'
+import { FinalSection } from './components/FinalSection.tsx'
 import { FortuneWheelModal } from './components/FortuneWheelModal.tsx'
 import { HeroSection } from './components/HeroSection.tsx'
-
-
-export type Zone = 'entrance' | 'games' | 'bar' | 'circus' | 'prizes'
+import { PerformersBlock } from './components/PerformersBlock.tsx'
 
 export default function App() {
   const [wheelOpen, setWheelOpen] = useState(false)
-  const [accessGranted, setAccessGranted] = useState(false)
-  const [scrollZone, setScrollZone] = useState<Zone | null>(null)
+  const [spin, setSpin] = useState(false)
+  const [prize, setPrize] = useState(0)
 
+  const spinSound = useRef<HTMLAudioElement | null>(null)
+  const clickSound = useRef<HTMLAudioElement | null>(null)
 
-  const handleResult = (zone: Zone) => {
-    setAccessGranted(true)
-    setScrollZone(zone)
+  // инициализация аудио один раз
+  useEffect(() => {
+    spinSound.current = new Audio(spinSrc)
+    spinSound.current.loop = true
+    spinSound.current.volume = 0.5
+
+    clickSound.current = new Audio(clickSrc)
+    clickSound.current.volume = 0.8
+  }, [])
+
+  const startSpin = () => {
+    if (spin) return
+    const nextPrize = Math.floor(Math.random() * 5)
+    setPrize(nextPrize)
+    setSpin(true)
   }
 
-  useEffect(() => {
-    if (!scrollZone) return
+  const stopSpin = () => {
+    spinSound.current?.pause()
+    if (spinSound.current) spinSound.current.currentTime = 0
+    clickSound.current?.play()
+    setSpin(false)
+  }
 
-    const el = document.getElementById(scrollZone)
-    el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [scrollZone])
+  const handleClose = () => {
+    setWheelOpen(false)
+    stopSpin()
+    setPrize(0)
+  }
 
   return (
-    <>
-      <FairLayout>
-        <HeroSection onEnter={() => setWheelOpen(true)}/>
+    <FairLayout>
+      <HeroSection onEnter={() => setWheelOpen(true)} />
 
+      {wheelOpen && (
         <FortuneWheelModal
           opened={wheelOpen}
-          onClose={() => setWheelOpen(false)}
-          onResult={handleResult}
+          spin={spin}
+          prize={prize}
+          onStartSpin={() => {
+            startSpin()
+            spinSound.current?.play()
+          }}
+          onStopSpin={stopSpin}
+          onClose={handleClose}
         />
+      )}
 
-        {accessGranted && (
-          <>
-            <AboutBlock />
-          </>
-        )}
-      </FairLayout>
-    </>
+      <AboutBlock />
+      <PerformersBlock />
+      <FinalSection />
+    </FairLayout>
   )
 }
-

@@ -26,7 +26,7 @@ export function HeroSection({ onEnter }: Props) {
             </Title>
 
             <Text ta="center" size="lg" style={styles.subtitle}>
-              ♒ 20 февраля
+              20 февраля
               <br/>
               Фортуна решает, готов ли ты войти
             </Text>
@@ -42,7 +42,7 @@ export function HeroSection({ onEnter }: Props) {
                 color="neonPink"
                 style={styles.button}
               >
-                Крутить колесо 🎡
+                Крутить колесо
               </Button>
             </motion.div>
           </Stack>

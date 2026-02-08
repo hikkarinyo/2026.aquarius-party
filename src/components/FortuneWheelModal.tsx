@@ -1,9 +1,8 @@
-import { useState } from 'react'
 import { Wheel } from 'react-custom-roulette'
 
 import { Button, Modal, Stack, Title } from '@mantine/core'
 
-import type { Zone } from '../App.tsx'
+import './bulb.css'
 
 const data = [
   { option: 'Проходи 🎟️' },
@@ -13,31 +12,24 @@ const data = [
   { option: 'Испытание 😈' },
 ]
 
-const zoneMap: Record<number, Zone> = {
-  0: 'entrance',
-  1: 'bar',
-  2: 'circus',
-  3: 'prizes',
-  4: 'games',
-}
+const neonColors = ['#6a00ff', '#ff008c', '#00eaff', '#ffcc00', '#00ff99']
 
+const WHEEL_SIZE = 500
+const BULB_SIZE = 12
+const BULB_GAP = 6
+const BULB_RADIUS = WHEEL_SIZE / 2 - BULB_SIZE / 2 - BULB_GAP
+const BULBS_COUNT = 24
 
 type Props = {
   opened: boolean
+  spin: boolean
+  prize: number
+  onStartSpin: () => void
+  onStopSpin: () => void
   onClose: () => void
-  onResult: (zone: Zone) => void
 }
 
-
-export function FortuneWheelModal({ opened, onClose, onResult }: Props) {
-  const [spin, setSpin] = useState(false)
-  const [prize, setPrize] = useState(0)
-
-  const startSpin = () => {
-    setPrize(Math.floor(Math.random() * data.length))
-    setSpin(true)
-  }
-
+export function FortuneWheelModal({ opened, spin, prize, onStartSpin, onStopSpin, onClose }: Props) {
   return (
     <Modal
       opened={opened}
@@ -45,33 +37,81 @@ export function FortuneWheelModal({ opened, onClose, onResult }: Props) {
       centered
       size="lg"
       withCloseButton={false}
+      radius={20}
       styles={{
-        body: {
-          overflow: 'hidden',
-        },
+        body: { background: 'radial-gradient(circle at center, #2a004f 0%, #0b0015 70%)', overflow: 'hidden' },
+        content: { background: 'radial-gradient(circle at center, #2a004f 0%, #0b0015 70%)' },
       }}
     >
-    <Stack align="center" gap="lg">
-        <Title order={3}>Колесо Фортуны</Title>
+      <Stack align="center" gap="lg">
+        <Title order={3} style={{ color: '#fff', textShadow: '0 0 10px #ff00cc' }}>
+          Колесо Фортуны
+        </Title>
 
-      <Wheel
-        mustStartSpinning={spin}
-        prizeNumber={prize}
-        data={data}
-        outerBorderWidth={4}
-        radiusLineWidth={2}
-        fontSize={14}
-        backgroundColors={['#ff00cc', '#3333ff']}
-        textColors={['#ffffff']}
-        onStopSpinning={() => {
-          setSpin(false)
-          onResult(zoneMap[prize])
-          onClose()
-        }}
-      />
+        <div style={{ position: 'relative', width: WHEEL_SIZE, height: WHEEL_SIZE, borderRadius: '50%', boxShadow: '0 0 30px rgba(255, 0, 204, 0.6),0 0 60px rgba(51, 255, 255, 0.3)' }}>
+          {Array.from({ length: BULBS_COUNT }).map((_, i) => {
+            const angle = (360 / BULBS_COUNT) * i
+            return (
+              <div
+                key={i}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  width: BULB_SIZE,
+                  height: BULB_SIZE,
+                  marginLeft: -BULB_SIZE / 2,
+                  marginTop: -BULB_SIZE / 2,
+                  borderRadius: '50%',
+                  background: i % 2 === 0 ? '#fff' : '#ffcc00',
+                  transform: `rotate(${angle}deg) translate(${BULB_RADIUS}px)`,
+                  animation: 'bulbBlink 1.2s infinite',
+                  animationDelay: `${i * 0.08}s`,
+                }}
+              />
+            )
+          })}
 
-      <Button onClick={startSpin} size="md">
-          Крутить
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+            <Wheel
+              mustStartSpinning={spin}
+              prizeNumber={prize}
+              data={data}
+              backgroundColors={neonColors}
+              textColors={['#ffffff']}
+              fontSize={16}
+              perpendicularText
+              outerBorderWidth={8}
+              outerBorderColor="#ff00cc"
+              radiusLineWidth={2}
+              radiusLineColor="rgba(255,255,255,0.4)"
+              spinDuration={1.6}
+              pointerProps={{
+                style: {
+                  fill: '#ffcc00',
+                  filter: 'drop-shadow(0 0 6px #ffcc00) drop-shadow(0 0 12px #ff9900)',
+                },
+              }}
+              onStopSpinning={() => {
+                onStopSpin() // останавливаем звук и воспроизводим клик
+                onClose()    // закрываем модалку
+              }}
+            />
+          </div>
+        </div>
+
+        <Button
+          onClick={onStartSpin}
+          disabled={spin}
+          size="md"
+          style={{
+            background: '#ff00cc',
+            opacity: spin ? 0.6 : 1,
+            cursor: spin ? 'not-allowed' : 'pointer',
+            boxShadow: '0 0 10px rgba(255,0,204,0.8), 0 0 20px rgba(255,0,204,0.6)',
+          }}
+        >
+          {spin ? 'Крутится…' : 'Крутить'}
         </Button>
       </Stack>
     </Modal>
