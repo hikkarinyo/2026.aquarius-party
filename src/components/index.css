@@ -1,0 +1,75 @@
+/* ========================= */
+/* 🎪 Бегущая строка */
+/* ========================= */
+
+.fair-marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    margin-bottom: 24px;
+    opacity: 0.9;
+}
+
+.fair-marquee__inner {
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 18s linear infinite;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 12px rgba(255, 0, 200, 0.6);
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* ========================= */
+/* 🎠 Карточки */
+/* ========================= */
+
+.fair-card {
+    padding: 24px;
+    border-radius: 18px;
+
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(6px);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    cursor: default;
+
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+    animation: fairFadeIn 0.6s ease forwards;
+
+    transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            background 0.25s ease;
+}
+
+@keyframes fairFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.fair-card:hover {
+    transform: translateY(-6px) rotate(-0.5deg);
+    background: rgba(255, 255, 255, 0.1);
+
+    box-shadow:
+            0 10px 30px rgba(0, 0, 0, 0.4),
+            0 0 24px rgba(255, 0, 200, 0.3);
+}
+
+/* Неоновая подсветка эмодзи */
+.fair-card > div:first-child {
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7));
+}
