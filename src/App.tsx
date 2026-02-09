@@ -1,51 +1,68 @@
 import { useEffect, useRef, useState } from 'react'
 
-import clickSrc from '../public/sounds/click.mp3'
 import spinSrc from '../public/sounds/spin.mp3'
 
-import { AboutBlock } from './components/AboutBlock.tsx'
-import { FairLayout } from './components/FairLayout.tsx'
-import { FinalSection } from './components/FinalSection.tsx'
-import { FortuneWheelModal } from './components/FortuneWheelModal.tsx'
-import { HeroSection } from './components/HeroSection.tsx'
-import { PerformersBlock } from './components/PerformersBlock.tsx'
+import { AboutBlock } from './components/about/AboutBlock'
+import { FairLayout } from './components/FairLayout'
+import { FinalSection } from './components/FinalSection'
+import { HeroSection } from './components/HeroSection'
+import { FortuneWheelModal } from './components/modal/FortuneWheelModal'
+import { PerformersBlock } from './components/PerformersBlock'
+
+const UNLOCK_KEY = 'fair_content_unlocked'
 
 export default function App() {
   const [wheelOpen, setWheelOpen] = useState(false)
   const [spin, setSpin] = useState(false)
   const [prize, setPrize] = useState(0)
+  const [isUnlocked, setIsUnlocked] = useState(() => {
+    return localStorage.getItem(UNLOCK_KEY) === 'true'
+  })
 
   const spinSound = useRef<HTMLAudioElement | null>(null)
-  const clickSound = useRef<HTMLAudioElement | null>(null)
+  const firstBlockRef = useRef<HTMLDivElement | null>(null)
 
-  // инициализация аудио один раз
   useEffect(() => {
     spinSound.current = new Audio(spinSrc)
     spinSound.current.loop = true
     spinSound.current.volume = 0.5
-
-    clickSound.current = new Audio(clickSrc)
-    clickSound.current.volume = 0.8
   }, [])
 
   const startSpin = () => {
     if (spin) return
-    const nextPrize = Math.floor(Math.random() * 5)
-    setPrize(nextPrize)
+    setPrize(Math.floor(Math.random() * 5))
     setSpin(true)
+    spinSound.current?.play()
   }
 
   const stopSpin = () => {
     spinSound.current?.pause()
     if (spinSound.current) spinSound.current.currentTime = 0
-    clickSound.current?.play()
     setSpin(false)
   }
 
-  const handleClose = () => {
-    setWheelOpen(false)
+  const handleWheelStopped = () => {
     stopSpin()
-    setPrize(0)
+    setWheelOpen(false)
+
+    if (!isUnlocked) {
+      setIsUnlocked(true)
+      localStorage.setItem(UNLOCK_KEY, 'true')
+
+      setTimeout(() => {
+        if (!firstBlockRef.current) return
+        const rect = firstBlockRef.current.getBoundingClientRect()
+        window.scrollTo({
+          top: window.scrollY + rect.top - 40,
+          behavior: 'smooth',
+        })
+      }, 400)
+    }
+  }
+
+  const handleModalClose = () => {
+    if (spin) return
+    setWheelOpen(false)
   }
 
   return (
@@ -57,18 +74,23 @@ export default function App() {
           opened={wheelOpen}
           spin={spin}
           prize={prize}
-          onStartSpin={() => {
-            startSpin()
-            spinSound.current?.play()
-          }}
+          onStartSpin={startSpin}
           onStopSpin={stopSpin}
-          onClose={handleClose}
+          onWheelStop={handleWheelStopped}
+          onClose={handleModalClose}
         />
       )}
 
-      <AboutBlock />
-      <PerformersBlock />
-      <FinalSection />
+      {isUnlocked && (
+        <>
+          <div ref={firstBlockRef}>
+            <AboutBlock />
+          </div>
+          <PerformersBlock />
+          <FinalSection />
+        </>
+      )}
     </FairLayout>
   )
 }
+

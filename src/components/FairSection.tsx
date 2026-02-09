@@ -32,7 +32,6 @@ export function FairSection({ id, title, subtitle, children }: Props) {
 const styles = {
   section: {
     position: 'relative' as const,
-    minHeight: '100vh',
     paddingTop: 30,
     paddingBottom: 30,
     overflow: 'hidden',

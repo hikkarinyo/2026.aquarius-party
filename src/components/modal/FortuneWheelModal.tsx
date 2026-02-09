@@ -1,8 +1,9 @@
 import { Wheel } from 'react-custom-roulette'
 
-import { Button, Modal, Stack, Title } from '@mantine/core'
+import { Button, CloseButton,Modal, Stack, Title } from '@mantine/core'
+import { useMediaQuery } from '@mantine/hooks'
 
-import './bulb.css'
+import './style.css'
 
 const data = [
   { option: 'Проходи 🎟️' },
@@ -14,10 +15,8 @@ const data = [
 
 const neonColors = ['#6a00ff', '#ff008c', '#00eaff', '#ffcc00', '#00ff99']
 
-const WHEEL_SIZE = 500
 const BULB_SIZE = 12
 const BULB_GAP = 6
-const BULB_RADIUS = WHEEL_SIZE / 2 - BULB_SIZE / 2 - BULB_GAP
 const BULBS_COUNT = 24
 
 type Props = {
@@ -27,28 +26,59 @@ type Props = {
   onStartSpin: () => void
   onStopSpin: () => void
   onClose: () => void
+  onWheelStop: () => void
 }
 
-export function FortuneWheelModal({ opened, spin, prize, onStartSpin, onStopSpin, onClose }: Props) {
+export function FortuneWheelModal({ opened, spin, prize, onStartSpin, onStopSpin, onClose, onWheelStop }: Props) {
+  const isMobile = useMediaQuery('(max-width: 768px)')
+  const WHEEL_SIZE = isMobile ? 350 : 500
+  const BULB_RADIUS = WHEEL_SIZE / 2 - BULB_SIZE / 2 - BULB_GAP
+
   return (
     <Modal
       opened={opened}
       onClose={onClose}
-      centered
-      size="lg"
+      fullScreen={isMobile}
+      centered={!isMobile}
+      size={isMobile ? '100%' : 'lg'}
       withCloseButton={false}
-      radius={20}
+      radius={isMobile ? 0 : 20}
       styles={{
-        body: { background: 'radial-gradient(circle at center, #2a004f 0%, #0b0015 70%)', overflow: 'hidden' },
-        content: { background: 'radial-gradient(circle at center, #2a004f 0%, #0b0015 70%)' },
+        body: {
+          background: 'transparent',
+          overflow: 'hidden',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 20,
+          height: '100%',
+        },
+        content: {
+          background: 'radial-gradient(circle at center, #2a004f 0%, #0b0015 70%)',
+          padding: 0,
+        },
       }}
     >
-      <Stack align="center" gap="lg">
-        <Title order={3} style={{ color: '#fff', textShadow: '0 0 10px #ff00cc' }}>
+        <CloseButton
+          onClick={onClose}
+          size={30}
+          iconSize={20}
+          style={{ position: 'absolute', top: 20, right: 20, zIndex: 10 }}
+        />
+
+
+      <Stack align="center" justify="center" gap="lg" style={{ width: '100%' }}>
+        <Title order={3} style={{ color: '#fff', textShadow: '0 0 10px #ff00cc', textAlign: 'center' }}>
           Колесо Фортуны
         </Title>
 
-        <div style={{ position: 'relative', width: WHEEL_SIZE, height: WHEEL_SIZE, borderRadius: '50%', boxShadow: '0 0 30px rgba(255, 0, 204, 0.6),0 0 60px rgba(51, 255, 255, 0.3)' }}>
+        <div style={{
+          position: 'relative',
+          width: WHEEL_SIZE,
+          height: WHEEL_SIZE,
+          borderRadius: '50%',
+          boxShadow: '0 0 30px rgba(255, 0, 204, 0.6),0 0 60px rgba(51, 255, 255, 0.3)',
+        }}>
           {Array.from({ length: BULBS_COUNT }).map((_, i) => {
             const angle = (360 / BULBS_COUNT) * i
             return (
@@ -85,7 +115,7 @@ export function FortuneWheelModal({ opened, spin, prize, onStartSpin, onStopSpin
               outerBorderColor="#ff00cc"
               radiusLineWidth={2}
               radiusLineColor="rgba(255,255,255,0.4)"
-              spinDuration={1.6}
+              spinDuration={1.1}
               pointerProps={{
                 style: {
                   fill: '#ffcc00',
@@ -93,8 +123,8 @@ export function FortuneWheelModal({ opened, spin, prize, onStartSpin, onStopSpin
                 },
               }}
               onStopSpinning={() => {
-                onStopSpin() // останавливаем звук и воспроизводим клик
-                onClose()    // закрываем модалку
+                onStopSpin()
+                onWheelStop()
               }}
             />
           </div>

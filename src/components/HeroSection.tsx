@@ -1,4 +1,5 @@
 import { Button, Container, Stack, Text, Title } from '@mantine/core'
+import { useMediaQuery } from '@mantine/hooks'
 import { motion } from 'framer-motion'
 
 type Props = {
@@ -6,28 +7,59 @@ type Props = {
 };
 
 export function HeroSection({ onEnter }: Props) {
+  const isMobile = useMediaQuery('(max-width: 768px)')
+
   return (
-    <div style={styles.wrapper}>
-      <Container size="md" style={styles.content}>
+    <div style={{ position: 'relative', height: '100vh' }}>
+      <Container
+        size="md"
+        style={{
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0 20px',
+        }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <Stack align="center" gap="xl">
-            <Text size="sm" c="dimmed" style={{ letterSpacing: 2 }}>
+          <Stack align="center" gap={isMobile ? 'md' : 'xl'}>
+            <Text
+              size={isMobile ? 'xs' : 'sm'}
+              c="dimmed"
+              style={{ letterSpacing: 2, textAlign: 'center' }}
+            >
               ВХОД ТОЛЬКО ДЛЯ ИЗБРАННЫХ
             </Text>
 
-            <Title order={1} style={styles.title}>
+            <Title
+              order={1}
+              style={{
+                fontSize: isMobile ? 36 : 64,
+                textAlign: 'center',
+                color: '#fff',
+                textShadow: `
+                  0 0 10px #ff00cc,
+                  0 0 30px #ff00cc,
+                  0 0 60px #3333ff
+                `,
+              }}
+            >
               ВОДОЛЕЙСКАЯ
-              <br/>
+              <br />
               ЯРМАРКА
             </Title>
 
-            <Text ta="center" size="lg" style={styles.subtitle}>
+            <Text
+              ta="center"
+              size={isMobile ? 'sm' : 'lg'}
+              style={{ color: '#e0e0ff' }}
+            >
               20 февраля
-              <br/>
+              <br />
               Фортуна решает, готов ли ты войти
             </Text>
 
@@ -36,11 +68,14 @@ export function HeroSection({ onEnter }: Props) {
               transition={{ repeat: Infinity, duration: 2 }}
             >
               <Button
-                size="xl"
+                size={isMobile ? 'lg' : 'xl'}
                 radius="xl"
                 onClick={onEnter}
                 color="neonPink"
-                style={styles.button}
+                style={{
+                  boxShadow: '0 0 30px rgba(255,0,204,0.9)',
+                  width: isMobile ? '100%' : 250,
+                }}
               >
                 Крутить колесо
               </Button>
@@ -51,37 +86,3 @@ export function HeroSection({ onEnter }: Props) {
     </div>
   )
 }
-
-const styles = {
-  wrapper: {
-    position: 'relative' as const,
-    height: '100vh',
-  },
-
-  content: {
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  title: {
-    fontSize: 64,
-    textAlign: 'center' as const,
-    color: '#fff',
-    textShadow: `
-      0 0 10px #ff00cc,
-      0 0 30px #ff00cc,
-      0 0 60px #3333ff
-    `,
-  },
-
-  subtitle: {
-    color: '#e0e0ff',
-  },
-
-  button: {
-    boxShadow: '0 0 30px rgba(255,0,204,0.9)',
-  },
-}
-

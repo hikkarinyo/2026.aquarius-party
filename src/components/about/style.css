@@ -1,7 +1,3 @@
-/* ========================= */
-/* 🎪 Бегущая строка */
-/* ========================= */
-
 .fair-marquee {
     overflow: hidden;
     white-space: nowrap;
@@ -28,10 +24,6 @@
     }
 }
 
-/* ========================= */
-/* 🎠 Карточки */
-/* ========================= */
-
 .fair-card {
     padding: 24px;
     border-radius: 18px;
@@ -47,10 +39,9 @@
     transform: translateY(20px) scale(0.96);
     animation: fairFadeIn 0.6s ease forwards;
 
-    transition:
-            transform 0.25s ease,
-            box-shadow 0.25s ease,
-            background 0.25s ease;
+    transition: transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
 }
 
 @keyframes fairFadeIn {
@@ -64,12 +55,10 @@
     transform: translateY(-6px) rotate(-0.5deg);
     background: rgba(255, 255, 255, 0.1);
 
-    box-shadow:
-            0 10px 30px rgba(0, 0, 0, 0.4),
-            0 0 24px rgba(255, 0, 200, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4),
+    0 0 24px rgba(255, 0, 200, 0.3);
 }
 
-/* Неоновая подсветка эмодзи */
 .fair-card > div:first-child {
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7));
 }
