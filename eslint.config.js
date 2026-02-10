@@ -26,7 +26,15 @@ export default defineConfig([globalIgnores(['dist']),
       'object-curly-spacing': ['error', 'always'],
 
       'simple-import-sort/imports': ['error', {
-        groups: [['^react'], ['^@?\\w'], ['^(@|components)(/.*|$)'], ['^\\u0000'], ['^(common|components|pages|models|store|routes|services|utils|enums|hooks)(/.*|$)', '^\\.\\.(?!/?$)', '^\\.\\./?$',], ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'], ['^(ui|styles|img)(/.*|$)', '^.+\\.?(svg)$', '^.+\\.?(css)$'],],
+        groups: [
+          ['^react', '^react-dom'],
+          ['^@?\\w'],
+          ['^(@|components)(/.*|$)'],
+          ['^\\u0000'],
+          ['^(components|constants|sections|styles)(/.*|$)', '^\\.\\.(?!/?$)', '^\\.\\./?$'],
+          ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
+          ['^(ui|styles|img)(/.*|$)', '^.+\\.?(svg|css)$'],
+        ],
       },],
 
       'simple-import-sort/exports': 'error',

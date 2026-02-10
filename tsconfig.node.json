@@ -27,9 +27,9 @@
     "paths": {
       "@/*": ["./src/*", "./dist/*", ""],
       "components/*": ["src/components/*"],
-      "routes/*": ["src/routes/*"],
-      "utils/*": ["src/utils/*"],
-      "hooks/*": ["src/hooks/*"],
+      "sections/*": ["src/sections/*"],
+      "styles/*": ["src/styles/*"],
+      "constants/*": ["src/constants/*"],
     },
     "allowSyntheticDefaultImports": true
   },

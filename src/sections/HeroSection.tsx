@@ -51,15 +51,39 @@ export function HeroSection({ onEnter }: Props) {
               ВОДОЛЕЙСКАЯ
               <br />
               ЯРМАРКА
+              <Text
+                component="span"
+                style={{
+                  display: 'block',
+                  fontSize: isMobile ? 18 : 24,
+                  color: '#ffd700',
+                  letterSpacing: 4,
+                  marginTop: 8,
+                }}
+              >
+                ЮБИЛЕЙНОЕ ИЗДАНИЕ
+              </Text>
             </Title>
+
+            <Text
+              mt="sm"
+              c="dimmed"
+              style={{
+                pointerEvents: 'auto',
+                textAlign: 'center',
+                fontSize: isMobile ? 14 : 16,
+              }}
+            >
+              20 февраля 19:00
+              <br/>
+              Место: офис Machineheads
+            </Text>
 
             <Text
               ta="center"
               size={isMobile ? 'sm' : 'lg'}
               style={{ color: '#e0e0ff' }}
             >
-              20 февраля
-              <br />
               Фортуна решает, готов ли ты войти
             </Text>
 
