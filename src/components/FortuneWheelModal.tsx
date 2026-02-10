@@ -78,7 +78,7 @@ export const FortuneWheelModal = ({
                   outerBorderColor="#ff00cc"
                   radiusLineWidth={2}
                   radiusLineColor="rgba(255,255,255,0.4)"
-                  spinDuration={0.1}
+                  spinDuration={1.1}
                   pointerProps={{
                     style: {
                       fill: '#ffcc00',
