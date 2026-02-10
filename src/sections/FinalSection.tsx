@@ -1,18 +1,23 @@
+import { useRef } from 'react'
+
 import { Anchor, Box, Text } from '@mantine/core'
 import { useMediaQuery } from '@mantine/hooks'
-import { motion } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 
 import finalImage from '../../public/images/fair-artists.png'
-
-import { FairSection } from './FairSection'
+import { FairSection } from '../components/layouts/FairSection.tsx'
 
 export function FinalSection() {
   const title = 'ВСЕХ  ЖДЁМ!'.split('')
   const isMobile = useMediaQuery('(max-width: 768px)')
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, margin: '-50px' })
+
 
   return (
     <FairSection id="final" title="" subtitle="">
       <Box
+        ref={ref}
         style={{
           fontSize: isMobile ? 36 : 64,
           fontWeight: 700,
@@ -31,7 +36,7 @@ export function FinalSection() {
           <motion.span
             key={index}
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: index * 0.1, type: 'spring', stiffness: 300 }}
           >
             {letter}

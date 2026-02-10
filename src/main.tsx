@@ -7,6 +7,7 @@ import App from './App.tsx'
 
 import '@mantine/core/styles.css'
 import '@mantine/carousel/styles.css'
+import './styles/index.css'
 
 const theme = createTheme({
   fontFamily: 'Inter, system-ui, sans-serif',

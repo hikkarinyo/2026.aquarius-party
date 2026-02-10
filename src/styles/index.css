@@ -1,0 +1,29 @@
+@keyframes fairFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.fair-card:hover {
+    transform: translateY(-6px) rotate(-0.5deg);
+    background: rgba(255, 255, 255, 0.1);
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4),
+    0 0 24px rgba(255, 0, 200, 0.3);
+}
+
+.fair-card > div:first-child {
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7));
+}
+
+@keyframes bulbBlink {
+    0%, 100% {
+        opacity: 0.4;
+        box-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+    }
+}

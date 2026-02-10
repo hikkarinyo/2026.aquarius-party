@@ -2,20 +2,24 @@ import { useEffect, useRef, useState } from 'react'
 
 import spinSrc from '../public/sounds/spin.mp3'
 
-import { AboutBlock } from './components/about/AboutBlock'
-import { FairLayout } from './components/FairLayout'
-import { FinalSection } from './components/FinalSection'
-import { HeroSection } from './components/HeroSection'
-import { FortuneWheelModal } from './components/modal/FortuneWheelModal'
-import { PerformersBlock } from './components/PerformersBlock'
+import { FortuneWheelModal } from './components/FortuneWheelModal'
+import { FairLayout } from './components/layouts/FairLayout'
+import { FairAttractionsSection } from './sections/FairAttractionsSection'
+import { FinalSection } from './sections/FinalSection'
+import { HeroSection } from './sections/HeroSection'
+import { PerformersSection } from './sections/PerformersSection'
 
 const UNLOCK_KEY = 'fair_content_unlocked'
 
+export type WheelStep = 'wheel' | 'result'
+
 export default function App() {
-  const [wheelOpen, setWheelOpen] = useState(false)
-  const [spin, setSpin] = useState(false)
+  const [isWheelModalOpen, setIsWheelModalOpen] = useState(false)
+  const [isSpinning, setIsSpinning] = useState(false)
   const [prize, setPrize] = useState(0)
-  const [isUnlocked, setIsUnlocked] = useState(() => {
+  const [wheelStep, setWheelStep] = useState<WheelStep>('wheel')
+
+  const [isContentUnlocked, setIsContentUnlocked] = useState(() => {
     return localStorage.getItem(UNLOCK_KEY) === 'true'
   })
 
@@ -28,29 +32,36 @@ export default function App() {
     spinSound.current.volume = 0.5
   }, [])
 
-  const startSpin = () => {
-    if (spin) return
+  const handleSpinStart = () => {
+    if (isSpinning) return
+
     setPrize(Math.floor(Math.random() * 5))
-    setSpin(true)
+    setIsSpinning(true)
     spinSound.current?.play()
   }
 
-  const stopSpin = () => {
+  const handleSpinStop = () => {
     spinSound.current?.pause()
     if (spinSound.current) spinSound.current.currentTime = 0
-    setSpin(false)
+    setIsSpinning(false)
   }
 
   const handleWheelStopped = () => {
-    stopSpin()
-    setWheelOpen(false)
+    handleSpinStop()
+    setWheelStep('result')
+  }
 
-    if (!isUnlocked) {
-      setIsUnlocked(true)
+  const handleGoNext = () => {
+    setIsWheelModalOpen(false)
+    setWheelStep('wheel')
+
+    if (!isContentUnlocked) {
+      setIsContentUnlocked(true)
       localStorage.setItem(UNLOCK_KEY, 'true')
 
       setTimeout(() => {
         if (!firstBlockRef.current) return
+
         const rect = firstBlockRef.current.getBoundingClientRect()
         window.scrollTo({
           top: window.scrollY + rect.top - 40,
@@ -61,36 +72,36 @@ export default function App() {
   }
 
   const handleModalClose = () => {
-    if (spin) return
-    setWheelOpen(false)
+    if (isSpinning) return
+    setIsWheelModalOpen(false)
+    setWheelStep('wheel')
   }
 
   return (
     <FairLayout>
-      <HeroSection onEnter={() => setWheelOpen(true)} />
+      <HeroSection onEnter={() => setIsWheelModalOpen(true)} />
 
-      {wheelOpen && (
-        <FortuneWheelModal
-          opened={wheelOpen}
-          spin={spin}
-          prize={prize}
-          onStartSpin={startSpin}
-          onStopSpin={stopSpin}
-          onWheelStop={handleWheelStopped}
-          onClose={handleModalClose}
-        />
-      )}
+      <FortuneWheelModal
+        isOpen={isWheelModalOpen}
+        isSpinning={isSpinning}
+        prize={prize}
+        step={wheelStep}
+        onSpinStart={handleSpinStart}
+        onSpinStop={handleSpinStop}
+        onWheelStopped={handleWheelStopped}
+        onGoNext={handleGoNext}
+        onClose={handleModalClose}
+      />
 
-      {isUnlocked && (
+      {isContentUnlocked && (
         <>
           <div ref={firstBlockRef}>
-            <AboutBlock />
+            <FairAttractionsSection />
           </div>
-          <PerformersBlock />
+          <PerformersSection />
           <FinalSection />
         </>
       )}
     </FairLayout>
   )
 }
-
