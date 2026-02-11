@@ -14,7 +14,7 @@ export interface Performer {
 export const PERFORMER_DATA: Performer[] = [
   {
     name: 'Гадалка',
-    description: 'Скажет правду, половину выдумает и улыбнётся одинаково.',
+    description: 'Скажет правду, половину выдумает и улыбнётся одинаково',
     image: fortune,
   },
   {
@@ -24,7 +24,7 @@ export const PERFORMER_DATA: Performer[] = [
   },
   {
     name: 'Клоун',
-    description: 'Попадёшь в цель — уйдёшь с красным носом.',
+    description: 'Попадёшь в цель — уйдёшь с красным носом',
     image: clown,
   },
   {
@@ -34,12 +34,12 @@ export const PERFORMER_DATA: Performer[] = [
   },
   {
     name: 'Иллюзионист',
-    description: 'Путает реальность, правила и шансы на победу.',
+    description: 'Путает реальность, правила и шансы на победу',
     image: illusionist,
   },
   {
     name: 'Егерьшталмейстер',
-    description: 'Испытания, где важно удержать равновесие… и самообладание.',
+    description: 'Испытания, где важно удержать равновесие… и самообладание',
     image: sprekhstalmeister,
   },
 ]

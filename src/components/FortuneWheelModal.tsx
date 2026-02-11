@@ -1,6 +1,6 @@
 import { Wheel } from 'react-custom-roulette'
 
-import { Button, CloseButton, Modal, Stack, Text, Title, Transition } from '@mantine/core'
+import { CloseButton, Modal, Stack, Title, Transition } from '@mantine/core'
 import { useMediaQuery } from '@mantine/hooks'
 
 import type { WheelStep } from '../App'
@@ -14,6 +14,7 @@ import {
 
 import SpinButton from './wheel/SpinButton'
 import WheelContainer from './wheel/WheelContainer'
+import { WheelResult } from './wheel/WheelResult.tsx'
 
 interface WheelModalProps {
   isOpen: boolean
@@ -32,7 +33,7 @@ export const FortuneWheelModal = ({
 }: WheelModalProps) => {
   const isMobile = useMediaQuery('(max-width: 768px)')
 
-  const WHEEL_SIZE = isMobile ? 350 : 500
+  const WHEEL_SIZE = isMobile ? 370 : 500
   const BULB_RADIUS = WHEEL_SIZE / 2 - BULB_SIZE / 2 - BULB_GAP
 
   return (
@@ -70,15 +71,16 @@ export const FortuneWheelModal = ({
                 <Wheel
                   mustStartSpinning={isSpinning}
                   prizeNumber={prize}
-                  data={WHEEL_DATA}
+                  data={WHEEL_DATA.map(d => ({ option: d.emoji }))}
                   backgroundColors={NEON_COLORS}
                   textColors={['#ffffff']}
-                  fontSize={16}
+                  perpendicularText
+                  fontSize={20}
                   outerBorderWidth={8}
                   outerBorderColor="#ff00cc"
                   radiusLineWidth={2}
                   radiusLineColor="rgba(255,255,255,0.4)"
-                  spinDuration={1.1}
+                  spinDuration={0.1}
                   pointerProps={{
                     style: {
                       fill: '#ffcc00',
@@ -103,55 +105,9 @@ export const FortuneWheelModal = ({
 
         <Transition mounted={step === 'result'} transition="scale" duration={3000}>
           {(styles) => (
-            <Stack
-              align="center"
-              gap="lg"
-              style={styles}
-            >
-              <Title
-                order={2}
-                style={{
-                  color: '#ffcc00',
-                  textShadow: '0 0 15px #ffcc00',
-                  textAlign: 'center',
-                }}
-              >
-                🎉 Поздравляем! 🎉
-              </Title>
-
-              <Title order={4} style={{ color: '#fff', textAlign: 'center' }}>
-                Вы выиграли: {WHEEL_DATA[prize].option}
-              </Title>
-
-              <Button
-                size="lg"
-                radius="xl"
-                onClick={() => {
-                  if (WHEEL_DATA[prize].id === 'prize') {
-                    window.open('https://youtu.be/dQw4w9WgXcQ?si=IiBMLz8prARMntDu', '_blank')
-                  }
-                  onGoNext()
-                }}
-                style={{
-                  background: 'linear-gradient(90deg, #ff00cc, #ffcc00)',
-                }}
-              >
-                Посмотреть, что вас ждёт
-              </Button>
-
-              {WHEEL_DATA[prize].id === 'prize' && (
-                <Text
-                  mt="sm"
-                  c="dimmed"
-                  style={{
-                    fontSize: 14,
-                    marginTop: '0px',
-                  }}
-                >
-                  Не забудь заскринить, чтобы получить плюшку!
-                </Text>
-              )}
-            </Stack>
+            <div style={styles}>
+              <WheelResult prize={prize} onGoNext={onGoNext}/>
+            </div>
           )}
         </Transition>
       </Stack>
