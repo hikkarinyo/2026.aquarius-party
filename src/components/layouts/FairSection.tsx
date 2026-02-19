@@ -29,7 +29,7 @@ export function FairSection({ id, title, subtitle, children }: Props) {
   )
 }
 
-const styles = {
+export const styles = {
   section: {
     position: 'relative' as const,
     paddingTop: 30,
