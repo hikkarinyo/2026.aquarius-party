@@ -1,9 +1,11 @@
-import {Box, Button, Text} from '@mantine/core'
-import {useNavigate} from 'react-router-dom'
-import {FairLayout} from "../components/layouts/FairLayout.tsx";
-import {FairSection} from "../components/layouts/FairSection.tsx";
-import {motion} from "framer-motion";
-import {useMediaQuery} from "@mantine/hooks";
+import { useNavigate } from 'react-router-dom'
+
+import { Box, Button, Text } from '@mantine/core'
+import { useMediaQuery } from '@mantine/hooks'
+import { motion } from 'framer-motion'
+
+import { FairLayout } from '../components/layouts/FairLayout.tsx'
+import { FairSection } from '../components/layouts/FairSection.tsx'
 
 export default function NotFoundPage() {
   const navigate = useNavigate()
@@ -29,8 +31,8 @@ export default function NotFoundPage() {
           </Text>
 
           <motion.div
-            animate={{scale: [1, 1.05, 1]}}
-            transition={{repeat: Infinity, duration: 2}}
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
           >
             <Button
               size={isMobile ? 'lg' : 'xl'}
