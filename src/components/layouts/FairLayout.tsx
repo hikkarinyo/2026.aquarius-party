@@ -2,6 +2,8 @@ import type { PropsWithChildren } from 'react'
 
 import { motion } from 'framer-motion'
 
+import { FairHeader } from './FairHeader.tsx'
+
 // Генерируем случайные частицы один раз
 const particles = Array.from({ length: 15 }).map(() => ({
   size: 6 + Math.random() * 6,
@@ -16,6 +18,7 @@ const particles = Array.from({ length: 15 }).map(() => ({
 export function FairLayout({ children }: PropsWithChildren) {
   return (
     <div style={styles.wrapper}>
+      <FairHeader />
       {children}
 
       <div style={styles.confettiLayer}>
