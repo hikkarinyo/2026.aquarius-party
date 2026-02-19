@@ -3,7 +3,6 @@ import { Wheel } from 'react-custom-roulette'
 import { CloseButton, Modal, Stack, Title, Transition } from '@mantine/core'
 import { useMediaQuery } from '@mantine/hooks'
 
-import type { WheelStep } from '../App'
 import {
   BULB_GAP,
   BULB_SIZE,
@@ -11,6 +10,7 @@ import {
   NEON_COLORS,
   WHEEL_DATA,
 } from '../constants/wheel'
+import type { WheelStep } from '../pages/MainPage.tsx'
 
 import SpinButton from './wheel/SpinButton'
 import WheelContainer from './wheel/WheelContainer'
